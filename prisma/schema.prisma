@@ -11,12 +11,15 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  username  String    @unique
-  password  String
-  updates   Update[]
-  Product   Product[]
+  id          String        @id @default(uuid())
+  createdAt   DateTime      @default(now())
+  username    String        @unique
+  password    String
+  updates     Update[]
+  Product     Product[]
+  APIRequests ApiRequests[]
+  APIKey      ApiKey[]
+  BlockedIP   Ip[]
 }
 
 model Product {
@@ -63,4 +66,37 @@ model UpdatePoint {
 
   updateId String
   update   Update @relation(fields: [updateId], references: [id])
+}
+
+// Models for analytics
+
+model ApiRequests {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  ip        String
+  path      String
+  method    String
+  status    Int
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model ApiKey {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  name        String
+  description String
+  key         String   @unique
+  User        User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model Ip {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  ip        String   @unique
+  reason    String?
+  blocked   Boolean
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
