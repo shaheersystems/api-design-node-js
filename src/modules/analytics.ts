@@ -1,49 +1,38 @@
 import prisma from "../db";
 
-export const apikeyCheck = async (req, res, next) => {
-  // take api key from args of url
-  const apikey: string = req.query.apikey;
-  // if no api key, return error
-  if (!apikey) {
-    res.status(401);
-    res.json({ message: "Invalid API Key" });
-    return;
-  }
-  // check if api key is valid from the db
-  const apikeyCheck = await prisma.apiKey.findUnique({
-    where: {
-      key: apikey,
-    },
-  });
-  // if valid, call next()
-  if (!apikeyCheck) {
-    res.status(401);
-    res.json({ message: "Invalid API Key" });
-    return;
-  }
-  // if invalid, return error
-  next();
-};
+// export const apikeyCheck = async (req, res, next) => {
+//   // take api key from args of url
+//   const apikey: string = req.query.apikey;
+//   // if no api key, return error
+//   if (!apikey) {
+//     res.status(401);
+//     res.json({ message: "Invalid API Key" });
+//     return;
+//   }
+//   // check if api key is valid from the db
+//   const apikeyCheck = await prisma.apiKey.findUnique({
+//     where: {
+//       key: apikey,
+//     },
+//   });
+//   // if valid, call next()
+//   if (!apikeyCheck) {
+//     res.status(401);
+//     res.json({ message: "Invalid API Key" });
+//     return;
+//   }
+//   // if invalid, return error
+//   next();
+// };
 
 export const collectAPIRequests = async (req, res, next) => {
   // take api key from args of url;
-  const apikey: string = req.query.apikey;
   // take the url from the request
   const url: string = req.url;
   // take the method from the request
   const method: string = req.method;
   // take the ip address from the request
   const ip: string = req.ip;
-
-  // get the user on the basis of api key
-  const userId = await prisma.apiKey.findUnique({
-    where: {
-      key: apikey,
-    },
-    select: {
-      userId: true,
-    },
-  });
 
   // create a new request in the db
   const request = await prisma.apiRequests.create({
@@ -52,7 +41,7 @@ export const collectAPIRequests = async (req, res, next) => {
       method,
       status: res.statusCode,
       ip,
-      userId: userId.userId,
+      userId: req.user.id,
     },
   });
 

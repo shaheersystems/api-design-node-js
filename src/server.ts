@@ -4,6 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { protect } from "./modules/auth";
 import { createNewUser, signIn } from "./handlers/user";
+import { checkBlockedIP, collectAPIRequests } from "./modules/analytics";
 
 const app = express();
 
@@ -33,7 +34,7 @@ app.get("/", (req, res) => {
   res.json({ message: "server is working" });
 });
 
-app.use("/api", protect, router);
+app.use("/api", protect, checkBlockedIP, collectAPIRequests, router);
 
 app.post("/user", createNewUser);
 app.post("/signin", signIn);
