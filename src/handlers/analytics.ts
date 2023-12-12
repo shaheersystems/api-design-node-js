@@ -7,6 +7,9 @@ export const getAnalytics = async (req, res) => {
       where: {
         userId: req.user.id,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     res.json({ data: analytics });
   } catch (error) {

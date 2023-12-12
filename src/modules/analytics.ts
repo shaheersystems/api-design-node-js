@@ -34,6 +34,7 @@ export const checkBlockedIP = async (req, res, next) => {
     where: {
       ip,
       blocked: true,
+      // userId: req.id,
     },
   });
   // if blocked, return error
