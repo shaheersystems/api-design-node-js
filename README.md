@@ -11,7 +11,7 @@
 
   Enter a jwt secret (it can be any value) `JWT_SECRET="secret"`
 
-- Database migration and applying scheme to your database: `npx prisma migrate dev`
+- Database migration and applying schema to your database: `npx prisma migrate dev`
 - Start server: `npm run dev`
 
 Post in issues if you run into any problems.
