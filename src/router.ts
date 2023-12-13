@@ -9,6 +9,7 @@ import {
   getProducts,
   updateProduct,
 } from "./handlers/product";
+import { allIPs, blockIPForUser } from "./handlers/analytics";
 
 const router = Router();
 
@@ -90,5 +91,19 @@ router.post(
 );
 
 router.delete("/update-points/:id", () => {});
+
+/**
+ * IP routes
+ */
+
+router.get("/ips", allIPs);
+
+router.post(
+  "/ips",
+  body("ip").exists().isString(),
+  body("reason").optional().isString(),
+  handleInputError,
+  blockIPForUser
+);
 
 export default router;

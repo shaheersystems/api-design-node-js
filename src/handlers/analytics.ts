@@ -20,15 +20,36 @@ export const getAnalytics = async (req, res) => {
   }
 };
 
-export const createBlockIP = async (req, res) => {
-  console.log("createBlockIP request for user:", req.user.id);
-  const { ip } = req.body;
+export const allIPs = async (req, res) => {
+  console.log("allIPs request for user:", req.user.id);
+  try {
+    const ips = await prisma.user.findUnique({
+      where: {
+        id: req.user.id,
+      },
+      select: {
+        BlockedIP: true,
+      },
+    });
+    res.json({ data: ips });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while fetching IPs" });
+  }
+};
+
+export const blockIPForUser = async (req, res) => {
+  console.log("blockIPForUser request for user:", req.user.id);
+  const { ip, reason } = req.body;
+  const userId = req.user.id;
+
   try {
     const blockedIP = await prisma.ip.create({
       data: {
         ip,
         blocked: true,
-        reason: req.body.reason,
+        reason,
+        userId,
       },
     });
     res.json({ data: blockedIP });

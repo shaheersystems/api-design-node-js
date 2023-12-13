@@ -4,7 +4,7 @@ import cors from "cors";
 import { protect } from "./modules/auth";
 import { createNewUser, signIn } from "./handlers/user";
 import { checkBlockedIP, collectAPIRequests } from "./modules/analytics";
-import { createBlockIP, getAnalytics } from "./handlers/analytics";
+import { getAnalytics } from "./handlers/analytics";
 
 const app = express();
 
@@ -14,7 +14,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", protect, checkBlockedIP, collectAPIRequests, router);
 app.use("/analytics", protect, getAnalytics);
-app.use("/block", protect, createBlockIP);
 app.post("/user", createNewUser);
 app.post("/signin", signIn);
 
